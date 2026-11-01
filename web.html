@@ -1,1 +1,547 @@
+<!DOCTYPE html>
+<html lang="id">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RyM - Bio & Community</title>
+
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=UnifrakturMaguntia&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      background-color: #030303;
+      background-image:
+        radial-gradient(circle at 50% 30%, rgba(30, 30, 45, 0.6) 0%, rgba(3, 3, 3, 1) 85%);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 10px;
+    }
+
+    /* ---------------------------------- */
+    /* 1. LAYAR INTRO (RyM GLASS CARD)    */
+    /* ---------------------------------- */
+    .intro-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99;
+      background: rgba(3, 3, 3, 0.95);
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .intro-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .intro-glass-card {
+      position: relative;
+      width: 100%;
+      max-width: 340px;
+      padding: 40px 24px 30px 24px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      text-align: center;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .intro-glass-card:hover {
+      transform: translateY(-4px) scale(1.01);
+    }
+
+    /* Kilatan Kaca */
+    .intro-glass-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg,
+          transparent 45%,
+          rgba(255, 255, 255, 0.05) 48%,
+          rgba(255, 255, 255, 0.18) 50%,
+          rgba(255, 255, 255, 0.05) 52%,
+          transparent 55%);
+      transform: rotate(30deg);
+      animation: shine 4.5s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes shine {
+      0% {
+        transform: translateY(-100%) rotate(30deg);
+      }
+
+      30%,
+      100% {
+        transform: translateY(100%) rotate(30deg);
+      }
+    }
+
+    .logo-rym {
+      font-family: 'UnifrakturMaguntia', cursive;
+      font-size: 3.2rem;
+      letter-spacing: 2px;
+      color: #ffffff;
+      margin-bottom: 14px;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+    }
+
+    .intro-title {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 24px;
+    }
+
+    .tap-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .tap-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .tap-text {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    /* ---------------------------------- */
+    /* 2. CONTAINER HALAMAN UTAMA         */
+    /* ---------------------------------- */
+    .main-container {
+      width: 100%;
+      max-width: 440px;
+      background: rgba(18, 18, 22, 0.6);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      padding: 36px 20px 24px 20px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+    }
+
+    .main-container.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Profil & Avatar Monogram */
+    .avatar-wrapper {
+      position: relative;
+      width: 84px;
+      height: 84px;
+      margin: 0 auto 16px auto;
+    }
+
+    .avatar-box {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #0d0d12;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'UnifrakturMaguntia', cursive;
+      font-size: 2.2rem;
+      color: #ffffff;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+    }
+
+    .profile-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+
+    .profile.png-bio {
+      font-size: 0.82rem;
+      color: #8e8e93;
+      font-style: italic;
+      margin-bottom: 18px;
+    }
+
+    /* Sosmed Header Icon */
+    .social-header-links {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .social-header-links a {
+      color: #ffffff;
+      font-size: 1.25rem;
+      opacity: 0.8;
+      transition: all 0.2s ease;
+    }
+
+    .social-header-links a:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+
+    /* ---------------------------------- */
+    /* WIDGET STATUS AKTIVITAS (PRO+)     */
+    /* ---------------------------------- */
+    .activity-widget {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .activity-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'UnifrakturMaguntia', cursive;
+      font-size: 1.4rem;
+      position: relative;
+    }
+
+    .status-dot {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 10px;
+      height: 10px;
+      background-color: #22c55e;
+      border-radius: 50%;
+      border: 2px solid #121216;
+    }
+
+    .activity-details {
+      flex-grow: 1;
+    }
+
+    .activity-user-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    .activity-username {
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .badge-pro {
+      background: #ef4444;
+      color: #ffffff;
+      font-size: 0.55rem;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .activity-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .activity-sub {
+      font-size: 0.72rem;
+      color: #64748b;
+    }
+
+    /* ---------------------------------- */
+    /* STATS BAR (VIEWS, FOLLOWERS, DLL)  */
+    /* ---------------------------------- */
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 6px;
+      margin-bottom: 20px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+
+    .stat-item i {
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+
+    /* ---------------------------------- */
+    /* DAFTAR LINK UTAMA                  */
+    /* ---------------------------------- */
+    .links-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .link-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      color: #ffffff;
+      text-decoration: none;
+      transition: all 0.25 ease;
+      text-align: left;
+    }
+
+    .link-card:hover {
+      background-color: #0062ff00;
+      color: #3b82f6;
+      box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.15);
+      transform: translateY(0.25rem);
+    }
+
+    .link-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .link-icon-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .link-text-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .link-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .link-desc {
+      font-size: 0.7rem;
+      color: #64748b;
+    }
+
+    .link-external-icon {
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    /* Footer Text Bawah */
+    .footer-note {
+      margin-top: 24px;
+      font-size: 0.7rem;
+      color: #475569;
+    }
+
+    .footer-note a {
+      color: #64748b;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ==================================== -->
+  <!-- 1. INTRO OVERLAY (RyM GLASS CARD)    -->
+  <!-- ==================================== -->
+  <div class="intro-overlay" id="introOverlay">
+    <div class="intro-glass-card" onclick="openMainContent()">
+      <div class="logo-rym">RyM</div>
+      <div class="intro-title">Private Experience</div>
+      <div class="tap-container">
+        <div class="tap-line"></div>
+        <div class="tap-text">Tap Anywhere</div>
+        <div class="tap-line"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Audio Player -->
+      <audio id="introOverlay" src="music.mp3" loop></audio>
+
+
+  <!-- ==================================== -->
+  <!-- 2. CONTAINER UTAMA LINKTREE          -->
+  <!-- ==================================== -->
+  <div class="main-container" id="mainContainer">
+
+    <!-- Profil Avatar Monogram -->
+    <div class="avatar-wrapper">
+      <div class="avatar-box">R</div>
+    </div>
+
+    <!-- Nama Profil & Bio Quote -->
+    <h1 class="profile.png-name">RoyMs</h1>
+    <p class="profile.png-bio">Welcome.</p>
+
+    <!-- Header Social Icons -->
+    <div class="social-header-links">
+      <a href="https://tiktok.com" target="_blank" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+      <a href="https://youtube.com" target="_blank" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      <a href="https://discord.gg" target="_blank" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+    </div>
+
+    <!-- Status Activity Widget -->
+    <div class="activity-widget">
+      <div class="activity-icon">
+        R
+        <div class="status-dot"></div>
+      </div>
+      <div class="activity-details">
+        <div class="activity-user-row">
+          <span class="activity-username">RoyMs</span>
+          <span class="badge-pro">PRO+</span>
+          <i class="fa-solid fa-user-ninja" style="font-size: 0.7rem; color: #eab308;"></i>
+        </div>
+        <div class="activity-title">Playing RoyMs</div>
+        <div class="activity-sub">Join Discord</div>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-item"><i class="fa-regular fa-eye"></i> 1.2M</div>
+      <div class="stat-item"><i class="fa-solid fa-users"></i> 16.9K</div>
+      <div class="stat-item"><i class="fa-regular fa-heart"></i> 696.5K</div>
+      <div class="stat-item"><i class="fa-solid fa-signal"></i> 962</div>
+    </div>
+
+    <!-- List Link Cards -->
+    <div class="links-wrapper">
+
+      <!-- Link 1: Community -->
+      <a href="https://discord.gg/5k2a3gd3bB" target="_blank" class="link-card">
+        <div class="link-left">
+          <div class="link-icon-box">
+            <i class="fa-brands fa-discord" style="color: #ffffff;"></i>
+          </div>
+          <div class="link-text-group">
+            <div class="link-title">My Discord</div>
+            <div class="link-desc">Join Discord biar asyikk</div>
+          </div>
+        </div>
+        <i class="fa-solid fa-arrow-up-right-from-square link-external-icon"></i>
+      </a>
+
+      <!-- Link 2: Tiktok Link -->
+      <a href="https://www.tiktok.com/@boysbtr" target="_blank" class="link-card">
+        <div class="link-left">
+          <div class="link-icon-box">
+            <i class="fa-brands fa-tiktok" style="color: #22c55e;"></i>
+          </div>
+          <div class="link-text-group">
+            <div class="link-title">My TikTok</div>
+            <div class="link-desc">Follow and Like</div>
+          </div>
+        </div>
+        <i class="fa-solid fa-arrow-up-right-from-square link-external-icon"></i>
+      </a>
+
+      <!-- Link 3: Sociabuzz -->
+      <a href="https://sociabuzz.com/pentolenak/tribe" target="_blank" class="link-card">
+        <div class="link-left">
+          <div class="link-icon-box">
+            <i class="fa-solid fa-bolt" style="color: #06b6d4;"></i>
+          </div>
+          <div class="link-text-group">
+            <div class="link-title">Sociabuzz</div>
+            <div class="link-desc">Sawer Sawer</div>
+          </div>
+        </div>
+        <i class="fa-solid fa-arrow-up-right-from-square link-external-icon"></i>
+      </a>
+
+    </div>
+
+    <!-- Text Footer Bawah -->
+    <div class="footer-note">
+      Gabung bersama <b>RoyMs SA-MP</b> Experience <i class="fa-solid fa-arrow-up-right-from-square"
+        style="font-size: 0.6rem;"></i>
+    </div>
+
+  </div>
+
+  <!-- JavaScript Transisi Intro -->
+  <script>
+    function openMainContent() {
+      document.getElementById('introOverlay').classList.add('hidden');
+      document.getElementById('mainContainer').classList.add('active');
+    }
+  </script>
+
+</body>
+
+</html>
